@@ -79,3 +79,4 @@ Reverse Complement: TGTAATCAGCTAGCTAGCTAGCT
 
 📄 License
 © 2025 DNASEQ - Nucleotide Frequency Analysis. All rights reserved.# dnaseq
+# dnaseq
