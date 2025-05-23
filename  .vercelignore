@@ -1,5 +1,2 @@
 echo ".next/
 node_modules/
-.env
-.env.local
-.env.*.local" > .vercelignore
