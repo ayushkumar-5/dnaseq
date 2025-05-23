@@ -78,4 +78,4 @@ Reverse Complement: TGTAATCAGCTAGCTAGCTAGCT
 🧪 Interactive 3D DNA model
 
 📄 License
-© 2025 DNASEQ - Nucleotide Frequency Analysis. All rights reserved.
+© 2025 DNASEQ - Nucleotide Frequency Analysis. All rights reserved.# dnaseq
