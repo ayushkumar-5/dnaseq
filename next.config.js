@@ -6,7 +6,14 @@ const nextConfig = {
       fs: false,
       path: false,
     };
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      handlebars: 'handlebars/dist/handlebars.min.js'
+    };
     return config;
+  },
+  serverActions: {
+    allowedOrigins: ["http://localhost:3000", "https://dnaseq-delta.vercel.app/"]
   }
 }
 

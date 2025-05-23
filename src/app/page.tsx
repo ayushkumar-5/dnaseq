@@ -1,4 +1,3 @@
-
 // src/app/page.tsx
 "use client";
 
@@ -39,6 +38,35 @@ const exampleSequences = [
   ">Example_Sequence_5|Only_Invalid_Chars\n"
 ];
 
+// Create a server component for the actions
+async function analyzeSequence(values: DnaFormValues) {
+  const rawSequence = values.dnaSequence;
+  const parsedSeq = parseFasta(rawSequence);
+  
+  const warningResult = await generateDnaAnomalyWarning({ dnaSequence: parsedSeq });
+  
+  const counts = countNucleotides(parsedSeq);
+  const properties = calculateDerivedDnaProperties(parsedSeq, counts);
+  
+  let conceptualImageUrl = null;
+  if (counts && (counts.A > 0 || counts.T > 0 || counts.C > 0 || counts.G > 0)) { 
+    try {
+      const imageResult = await generateImage({ prompt: "Abstract artistic representation of a DNA helix structure, vibrant colors" });
+      conceptualImageUrl = imageResult.imageDataUri;
+    } catch (imgError) {
+      console.error("Conceptual image generation error:", imgError);
+    }
+  }
+
+  return {
+    parsedSeq,
+    counts,
+    properties,
+    warningResult,
+    conceptualImageUrl
+  };
+}
+
 export default function HomePage() {
   const [processedSequence, setProcessedSequence] = useState<string | null>(null);
   const [nucleotideCounts, setNucleotideCounts] = useState<NucleotideCounts | null>(null);
@@ -71,37 +99,15 @@ export default function HomePage() {
       setIsGeneratingImage(false);
 
       try {
-        const rawSequence = values.dnaSequence;
-        const parsedSeq = parseFasta(rawSequence);
+        const result = await analyzeSequence(values);
         
-        const warningResult = await generateDnaAnomalyWarning({ dnaSequence: parsedSeq });
-        setAiWarning(warningResult);
-        
-        const counts = countNucleotides(parsedSeq);
-        const properties = calculateDerivedDnaProperties(parsedSeq, counts);
-        
-        setProcessedSequence(parsedSeq);
-        setNucleotideCounts(counts);
-        setDnaProperties(properties);
+        setProcessedSequence(result.parsedSeq);
+        setNucleotideCounts(result.counts);
+        setDnaProperties(result.properties);
+        setAiWarning(result.warningResult);
+        setConceptualImageUrl(result.conceptualImageUrl);
 
-        if (counts && (counts.A > 0 || counts.T > 0 || counts.C > 0 || counts.G > 0)) { 
-          setIsGeneratingImage(true);
-          try {
-            const imageResult = await generateImage({ prompt: "Abstract artistic representation of a DNA helix structure, vibrant colors" });
-            setConceptualImageUrl(imageResult.imageDataUri);
-          } catch (imgError) {
-            console.error("Conceptual image generation error:", imgError);
-            toast({
-              variant: "default",
-              title: "Image Note",
-              description: "Could not generate the conceptual image. Displaying placeholder.",
-            });
-          } finally {
-            setIsGeneratingImage(false);
-          }
-        }
-
-        if (!warningResult.shouldDisplayWarning || !warningResult.warningMessage) {
+        if (!result.warningResult.shouldDisplayWarning || !result.warningResult.warningMessage) {
           toast({
             title: "Analysis Complete",
             description: "Nucleotide frequencies and properties have been calculated.",
@@ -131,7 +137,7 @@ export default function HomePage() {
   };
 
   return (
-  <div className="flex flex-col min-h-screen text-foreground">
+    <div className="flex flex-col min-h-screen text-foreground">
       <Header />
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8">
         <Card className="shadow-xl hover:shadow-2xl transform transition-all duration-300 ease-in-out hover:scale-[1.01] rounded-xl">
