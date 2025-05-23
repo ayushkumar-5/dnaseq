@@ -72,12 +72,4 @@ Reverse Complement: TGTAATCAGCTAGCTAGCTAGCT
 
 📚 Educational Tools
 📹 Embedded YouTube video explaining DNA concepts
-
-🧬 AI-generated conceptual image
-
-🧪 Interactive 3D DNA model
-
-📄 License
-© 2025 DNASEQ - Nucleotide Frequency Analysis. All rights reserved.# dnaseq
-# dnaseq
 # dnaseq
