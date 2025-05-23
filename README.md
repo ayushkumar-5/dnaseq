@@ -73,3 +73,4 @@ Reverse Complement: TGTAATCAGCTAGCTAGCTAGCT
 📚 Educational Tools
 📹 Embedded YouTube video explaining DNA concepts
 # dnaseq
+# dnaseq
